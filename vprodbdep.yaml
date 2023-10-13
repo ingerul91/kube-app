@@ -1,4 +1,4 @@
-apiVersion: apps/V1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: vprodb
@@ -35,7 +35,12 @@ spec:
         - name: vpro-db-data
           awsElasticBlockStore:
             volumeID: vol-0bbc942110892b03e
-            fsType: ext4                 
+            fsType: ext4
+
       initContainers:
         - name: busybox
           image: busybox:latest
+          args: ["rm", "-rf", "/var/lib/mysql/lost+found"]
+          volumeMounts:
+            - name: vpro-db-data
+              mountPath: /var/lib/mysql
